@@ -40,11 +40,7 @@
 cp -r skills/openclaw-termux ~/.openclaw/workspace/skills/
 ```
 
-或通过 ClawHub 安装（如果已发布）：
 
-```
-@小龙虾 帮我安装 openclaw-termux skill
-```
 
 #### 2. 准备手机
 
