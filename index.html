@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw Termux Install Skills 📱🦞</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0f;
+            --card: #12121a;
+            --accent: #ff6b35;
+            --accent2: #00d4aa;
+            --text: #e8e8e8;
+            --dim: #888;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            background: radial-gradient(ellipse at 50% 0%, rgba(255,107,53,0.15) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 80%, rgba(0,212,170,0.08) 0%, transparent 50%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255,107,53,0.1);
+            border: 1px solid rgba(255,107,53,0.3);
+            border-radius: 999px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 2rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--accent), #ff9a5c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--dim);
+            max-width: 600px;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .phone-emoji {
+            font-size: 6rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 20px 40px rgba(255,107,53,0.3));
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 1.2s ease;
+        }
+
+        .btn {
+            padding: 0.9rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #ff8a50);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(255,107,53,0.4);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,107,53,0.5); }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+        /* Features */
+        .features {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-sub {
+            text-align: center;
+            color: var(--dim);
+            font-size: 1.1rem;
+            margin-bottom: 4rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        .card:hover { border-color: rgba(255,107,53,0.3); transform: translateY(-4px); }
+
+        .card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .card h3 { font-size: 1.2rem; margin-bottom: 0.8rem; }
+        .card p { color: var(--dim); line-height: 1.7; font-size: 0.95rem; }
+
+        /* Stats */
+        .stats {
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, transparent, rgba(255,107,53,0.03), transparent);
+        }
+
+        .stats-grid {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-label { color: var(--dim); margin-top: 0.5rem; }
+
+        /* Steps */
+        .steps {
+            padding: 6rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #ff8a50);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 20px rgba(255,107,53,0.3);
+        }
+
+        .step-content h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .step-content p { color: var(--dim); line-height: 1.7; }
+        .step-content code {
+            background: rgba(255,107,53,0.1);
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: var(--accent);
+        }
+
+        /* Demo */
+        .demo {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .terminal {
+            max-width: 700px;
+            margin: 2rem auto;
+            background: #1a1a2e;
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: left;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .terminal-bar {
+            padding: 0.8rem 1rem;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .terminal-bar span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .terminal-bar span:nth-child(1) { background: #ff5f57; }
+        .terminal-bar span:nth-child(2) { background: #ffbd2e; }
+        .terminal-bar span:nth-child(3) { background: #28c840; }
+
+        .terminal-body {
+            padding: 1.5rem;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .terminal-body .prompt { color: var(--accent2); }
+        .terminal-body .cmd { color: var(--text); }
+        .terminal-body .output { color: var(--dim); }
+        .terminal-body .success { color: #28c840; }
+
+        /* Compatibility */
+        .compat {
+            padding: 4rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .compat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .compat-item {
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .compat-item .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .compat-item .name { font-weight: 600; }
+        .compat-item .status { color: var(--accent2); font-size: 0.85rem; margin-top: 0.3rem; }
+
+        /* Footer */
+        footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        footer p { color: var(--dim); }
+        footer a { color: var(--accent); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .cursor::after {
+            content: '▊';
+            animation: blink 1s infinite;
+            color: var(--accent2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .step { flex-direction: column; gap: 1rem; }
+            .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+            .stat-num { font-size: 1.8rem; }
+        }
+
+        /* Scroll animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="badge">🦞 Open Source · MIT License</div>
+    <div class="phone-emoji">📱</div>
+    <h1>旧手机别扔<br><span class="highlight">装上 OpenClaw</span></h1>
+    <p>一键在 Android 手机上部署 OpenClaw AI 助手。<br>飞书直连 · 24 小时在线 · 让抽屉里的老设备重新发光。</p>
+    <div class="cta-group">
+        <a href="https://github.com/Vavov5/openclaw-termux-install-skills" class="btn btn-primary">
+            ⭐ Star on GitHub
+        </a>
+        <a href="#install" class="btn btn-secondary">
+            📖 查看安装教程
+        </a>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="stats">
+    <div class="stats-grid reveal">
+        <div>
+            <div class="stat-num">5min</div>
+            <div class="stat-label">服务器预下载</div>
+        </div>
+        <div>
+            <div class="stat-num">10s</div>
+            <div class="stat-label">传输到手机</div>
+        </div>
+        <div>
+            <div class="stat-num">100×</div>
+            <div class="stat-label">比直接装快</div>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="features">
+    <h2 class="section-title reveal">为什么选择手机部署？</h2>
+    <p class="section-sub reveal">把淘汰的 Android 手机变成你的专属 AI 服务器</p>
+    <div class="grid">
+        <div class="card reveal">
+            <div class="card-icon">💰</div>
+            <h3>零成本运行</h3>
+            <p>不用买云服务器，不用租 VPS。旧手机插上电就是一台 24 小时在线的 AI 服务器。</p>
+        </div>
+        <div class="card reveal">
+            <div class="card-icon">💬</div>
+            <h3>飞书直连</h3>
+            <p>配置飞书 App 后，直接在飞书上跟 AI 对话。支持群聊、私聊、消息卡片。</p>
+        </div>
+        <div class="card reveal">
+            <div class="card-icon">🌐</div>
+            <h3>Web 管理界面</h3>
+            <p>局域网内任何设备都能通过浏览器访问 Control UI，管理对话和配置。</p>
+        </div>
+        <div class="card reveal">
+            <div class="card-icon">🛠️</div>
+            <h3>全功能支持</h3>
+            <p>飞书文档、知识库、云盘、股票分析……桌面版能做的，手机上一样能做。</p>
+        </div>
+        <div class="card reveal">
+            <div class="card-icon">🔒</div>
+            <h3>局域网安全</h3>
+            <p>只在内网运行，数据不出家门。比公网部署更安全。</p>
+        </div>
+        <div class="card reveal">
+            <div class="card-icon">🤖</div>
+            <h3>Agent Skill 生态</h3>
+            <p>安装一个 Skill，Agent 自动帮你完成所有部署步骤。告别手动配置。</p>
+        </div>
+    </div>
+</section>
+
+<!-- Terminal Demo -->
+<section class="demo">
+    <h2 class="section-title reveal">一句话搞定</h2>
+    <p class="section-sub reveal">告诉你的 AI 助手，剩下的它来</p>
+    <div class="terminal reveal">
+        <div class="terminal-bar">
+            <span></span><span></span><span></span>
+        </div>
+        <div class="terminal-body">
+            <div><span class="prompt">💬 你：</span></div>
+            <div style="margin-bottom: 1rem;"><span class="cmd">帮我在这台手机上安装 OpenClaw<br>IP: 192.168.1.100 密码: passwd</span></div>
+            <div><span class="prompt">🦞 小龙虾：</span></div>
+            <div><span class="output">正在连接手机 (192.168.1.100:8022)... ✅</span></div>
+            <div><span class="output">在服务器预下载 OpenClaw (跳过 git 依赖)... ✅</span></div>
+            <div><span class="output">打包并传输到手机 (97MB, 9s)... ✅</span></div>
+            <div><span class="output">解压并创建命令链接... ✅</span></div>
+            <div><span class="output">应用 Android 兼容性补丁... ✅</span></div>
+            <div><span class="output">配置模型和飞书通道... ✅</span></div>
+            <div><span class="output">复制 workspace 模板... ✅</span></div>
+            <div><span class="success">🎉 安装完成！手机龙虾已上线！</span></div>
+            <div><span class="success">访问: http://192.168.1.100:18789</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- Install Steps -->
+<section class="steps" id="install">
+    <h2 class="section-title reveal">手动安装也简单</h2>
+    <p class="section-sub reveal">7 步完成，每一步都有详细说明</p>
+
+    <div class="step reveal">
+        <div class="step-num">1</div>
+        <div class="step-content">
+            <h3>安装 Termux</h3>
+            <p>从 F-Droid 下载 Termux（不要用 Google Play 版），安装后运行 <code>pkg install nodejs python openssh</code></p>
+        </div>
+    </div>
+
+    <div class="step reveal">
+        <div class="step-num">2</div>
+        <div class="step-content">
+            <h3>服务器预下载</h3>
+            <p>在服务器运行 <code>npm install openclaw --ignore-scripts</code>，跳过慢网络和 git 依赖问题</p>
+        </div>
+    </div>
+
+    <div class="step reveal">
+        <div class="step-num">3</div>
+        <div class="step-content">
+            <h3>打包传输</h3>
+            <p>精简后打包 97MB，通过 SSH 传输到手机，10 秒搞定</p>
+        </div>
+    </div>
+
+    <div class="step reveal">
+        <div class="step-num">4</div>
+        <div class="step-content">
+            <h3>应用补丁</h3>
+            <p>运行 <code>scripts/patch-android.sh</code>，修复 Android 不支持 systemd 的问题</p>
+        </div>
+    </div>
+
+    <div class="step reveal">
+        <div class="step-num">5</div>
+        <div class="step-content">
+            <h3>配置 OpenClaw</h3>
+            <p>写入 <code>~/.openclaw/openclaw.json</code>，配置 AI 模型和飞书通道</p>
+        </div>
+    </div>
+
+    <div class="step reveal">
+        <div class="step-num">6</div>
+        <div class="step-content">
+            <h3>启动 Gateway</h3>
+            <p>在 Termux App 中运行 <code>openclaw gateway run</code>（⚠️ 必须从 App 启动，不能从 SSH）</p>
+        </div>
+    </div>
+
+    <div class="step reveal">
+        <div class="step-num">7</div>
+        <div class="step-content">
+            <h3>飞书配对</h3>
+            <p>首次发消息会收到配对码，运行 <code>openclaw pairing approve feishu XXXX</code> 完成配对</p>
+        </div>
+    </div>
+</section>
+
+<!-- Compatibility -->
+<section class="compat">
+    <h2 class="section-title reveal">兼容性</h2>
+    <p class="section-sub reveal">支持所有 Android 7.0+ 设备</p>
+    <div class="compat-grid reveal">
+        <div class="compat-item">
+            <div class="icon">📱</div>
+            <div class="name">Android 手机</div>
+            <div class="status">✅ 已测试</div>
+        </div>
+        <div class="compat-item">
+            <div class="icon">📟</div>
+            <div class="name">Android 平板</div>
+            <div class="status">✅ 理论支持</div>
+        </div>
+        <div class="compat-item">
+            <div class="icon">📺</div>
+            <div class="name">Android TV 盒子</div>
+            <div class="status">✅ 理论支持</div>
+        </div>
+        <div class="compat-item">
+            <div class="icon">🎮</div>
+            <div class="name">掌上游戏机</div>
+            <div class="status">✅ 理论支持</div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p style="font-size: 2rem; margin-bottom: 1rem;">🦞</p>
+    <p>Built with ❤️ by <a href="https://github.com/Vavov5">Vavov5</a></p>
+    <p style="margin-top: 0.5rem;">
+        <a href="https://github.com/Vavov5/openclaw-termux-install-skills">GitHub</a> ·
+        <a href="https://docs.openclaw.ai">OpenClaw Docs</a> ·
+        <a href="https://termux.dev">Termux</a>
+    </p>
+</footer>
+
+<script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
